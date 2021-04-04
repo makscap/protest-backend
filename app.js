@@ -1,26 +1,56 @@
-const express = require('express')
-const logger = require('morgan')
-const cors = require('cors')
+const express = require('express');
+const logger = require('morgan');
+const cors = require('cors');
 
+const TechQuestions = require('./model/tech-questions');
+const TheoryQuestions = require('./model/theory-questions');
+const User = require('./model/users');
 
-const app = express()
+const app = express();
 
-const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
+const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
-app.use(logger(formatsLogger))
-app.use(cors())
+app.use(logger(formatsLogger));
+app.use(cors());
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+  res.send('Hello World!');
+});
+
+// test route user
+app.get('/user', async (req, res) => {
+  const user = await User.findById('606849d2cff14956ef33b043');
+  return res.json({
+    status: 'success',
+    code: 200,
+    data: user,
+  });
+});
+// test route tech questions
+app.get('/tech', async (req, res) => {
+  const techQuestions = await TechQuestions.getAll();
+  return res.json({
+    status: 'success',
+    code: 200,
+    data: techQuestions,
+  });
+});
+// test route theory question
+app.get('/theory', async (req, res) => {
+  const theoryQuestions = await TheoryQuestions.getAll();
+  return res.json({
+    status: 'success',
+    code: 200,
+    data: theoryQuestions,
+  });
+});
 
 app.use((_req, res) => {
-      res.status(404).send({ massege: 'Not found' })
-  })
+  res.status(404).send({ massege: 'Not found' });
+});
 
 app.use((err, _req, res, _next) => {
-      res.status(500).send({ massege: err.massege })
-  })
+  res.status(500).send({ massege: err.massege });
+});
 
-module.exports = app
-
+module.exports = app;
