@@ -27,8 +27,8 @@ app.get('/user', async (req, res) => {
   });
 });
 // test route tech questions
-app.get('/tech', async (req, res) => {
-  const techQuestions = await TechQuestions.getAll();
+app.get('/qa-test/tech', async (req, res) => {
+  const techQuestions = await TechQuestions.getTechQ();
   return res.json({
     status: 'success',
     code: 200,
@@ -36,8 +36,8 @@ app.get('/tech', async (req, res) => {
   });
 });
 // test route theory question
-app.get('/theory', async (req, res) => {
-  const theoryQuestions = await TheoryQuestions.getAll();
+app.get('/qa-test/theory', async (req, res) => {
+  const theoryQuestions = await TheoryQuestions.getTheoryQ();
   return res.json({
     status: 'success',
     code: 200,
