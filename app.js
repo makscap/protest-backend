@@ -5,6 +5,9 @@ const rateLimit = require("express-rate-limit");
 const { HttpCode } = require('./helpers/constants')
 const usersRouter = require('./routes/api/user')
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
 const TechQuestions = require('./model/tech-questions');
 const TheoryQuestions = require('./model/theory-questions');
 
@@ -14,6 +17,8 @@ const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 app.use(logger(formatsLogger));
 app.use(cors());
+
+
 app.use(express.json({ limit: 10000 })) // ставится лимит для того чтобы нельзя было положить сервер от большого количества обьемов инфы
 
 const apiLimiter = rateLimit({
@@ -32,10 +37,26 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 app.use('/api/users', usersRouter)
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+// test route swagger-ui
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// test route user
+app.get('/user', async (req, res) => {
+  const user = await User.findById('606849d2cff14956ef33b043');
+  return res.json({
+    status: 'success',
+    code: 200,
+    data: user,
+  });
+});
 
 // test route tech questions
-app.get('/tech', async (req, res) => {
-  const techQuestions = await TechQuestions.getAll();
+app.get('/qa-test/tech', async (req, res) => {
+  const techQuestions = await TechQuestions.getTechQ();
   return res.json({
     status: 'success',
     code: 200,
@@ -43,8 +64,8 @@ app.get('/tech', async (req, res) => {
   });
 });
 // test route theory question
-app.get('/theory', async (req, res) => {
-  const theoryQuestions = await TheoryQuestions.getAll();
+app.get('/qa-test/theory', async (req, res) => {
+  const theoryQuestions = await TheoryQuestions.getTheoryQ();
   return res.json({
     status: 'success',
     code: 200,
