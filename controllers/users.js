@@ -47,7 +47,7 @@ const register = async (req, res, next) => {
         const { email,password } = req.body
           const user = await Users.findByEmail(email)
           const isValidPassword = await user?.validPassword(password)
-    if (!user || !isValidPassword || !user.verifyToken) {
+    if (!user || !isValidPassword || !user.verify) {
         return res.status(HttpCode.UNAUTHORIZED).json({
             status: 'error',
             code: HttpCode.UNAUTHORIZED,
@@ -86,7 +86,7 @@ const register = async (req, res, next) => {
         try {
            const user = await Users.findByVerifyToken(req.params.verifyToken)
            if (user) {
-            await Users.updateVerifyToken(user.id, null)
+            await Users.updateVerifyToken(user.id, true, null)
             return res.json({
              status: 'success',
              code: HttpCode.OK,
