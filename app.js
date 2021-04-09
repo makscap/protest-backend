@@ -1,31 +1,38 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+const rateLimit = require("express-rate-limit");
+const { HttpCode } = require('./helpers/constants')
+const usersRouter = require('./routes/api/user')
 
 const TechQuestions = require('./model/tech-questions');
 const TheoryQuestions = require('./model/theory-questions');
-const User = require('./model/users');
+
 
 const app = express();
-
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 app.use(logger(formatsLogger));
 app.use(cors());
+app.use(express.json({ limit: 10000 })) // ставится лимит для того чтобы нельзя было положить сервер от большого количества обьемов инфы
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50,
+  handler: (req, res, next) => {
+    return res.status(HttpCode.BAD_REQUEST).json({
+      status: "error",
+      code: HttpCode.BAD_REQUEST,
+      data: "forbidden",
+      message: "Too many requests, please try again later"
+  })
+  }
 });
 
-// test route user
-app.get('/user', async (req, res) => {
-  const user = await User.findById('606849d2cff14956ef33b043');
-  return res.json({
-    status: 'success',
-    code: 200,
-    data: user,
-  });
-});
+app.use('/api/', apiLimiter);
+app.use('/api/users', usersRouter)
+
+
 // test route tech questions
 app.get('/tech', async (req, res) => {
   const techQuestions = await TechQuestions.getAll();
@@ -45,12 +52,12 @@ app.get('/theory', async (req, res) => {
   });
 });
 
-app.use((_req, res) => {
-  res.status(404).send({ massege: 'Not found' });
+app.use((req, res) => {
+  res.status(404).json({ message: 'Not found :( ' });
 });
 
 app.use((err, _req, res, _next) => {
-  res.status(500).send({ massege: err.massege });
+  res.status(500).send({ message: err.massege });
 });
 
 module.exports = app;
