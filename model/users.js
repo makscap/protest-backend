@@ -11,12 +11,12 @@ const updateById = async (id, data) => {
 const findByEmail = async (email) => {
   return await User.findOne({ email });
 };
-const findByVerifyToken = async (token) => {
-  return await User.findOne({ verifyToken: token });
+const findByVerifyToken = async (verifyToken) => {
+  return await User.findOne({ verifyToken });
 };
 
-const updateVerifyToken = async (id, verify, token) => {
-  return await User.updateOne({ _id: id }, { verify, verifyToken: token });
+const updateVerifyToken = async (id, verify, verifyToken) => {
+  return await User.updateOne({ _id: id }, { verify, verifyToken });
 };
 
 const create = async ({ name, email, password, verify, verifyToken }) => {
