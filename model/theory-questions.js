@@ -1,10 +1,10 @@
 const TheoryQuestions = require('./schemas/theory-questions');
 
-const getAll = async () => {
-  const data = await TheoryQuestions.find({});
+const getTheoryQ = async () => {
+  const data = await TheoryQuestions.aggregate([{ $sample: {size: 12}}]);
 
   return data;
 };
 module.exports = {
-  getAll,
+  getTheoryQ,
 };

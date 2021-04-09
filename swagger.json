@@ -1,0 +1,536 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "2.0.0",
+    "title": "Pro test API",
+    "description": "Team project group 10.Application endpoints description",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "...herokuapp.com" }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "TechQuestions",
+      "description": "Technical test endpoints"
+    },
+    {
+      "name": "TheoryQuestions",
+      "description": "Theoretical test endpoints"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["User"],
+        "summary": "User registration",
+        "parameters": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {}
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "User login",
+        "parameters": [],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {}
+          },
+          "403": {
+            "description": "Email or password is wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Logout",
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get user information",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tech": {
+      "get": {
+        "tags": ["TechQuestions"],
+        "summary": "Get  tech test of 12 random questions",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QATechResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tech/results": {
+      "post": {
+        "tags": ["TechQuestions"],
+        "summary": "Get tech test results",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QATechResultsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/theory": {
+      "get": {
+        "tags": ["TheoryQuestions"],
+        "summary": "Get  theory test of 12 random questions",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QATheoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/theory/results": {
+      "post": {
+        "tags": ["TheoryQuestions"],
+        "summary": "Get theory test results",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QATheoryResultsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "required": ["email", "password"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "123qwerty"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "606849d2cff14956ef33b043"
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": ["email", "password"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "123qwerty"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Access token after success login",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjE3MzYzMTIzLCJleHAiOjE2NDg4OTkxMjN9.GYGPRZl0d04e41W4mJSyeS1I5zvfTU-Dz2rMONAFM3U"
+          },
+          "userData": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "507f1f77bcf86cd799439012"
+              }
+            }
+          }
+        }
+      },
+      "QATechResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question tech"
+            },
+            "questionId": {
+              "type": "integer",
+              "description": "Question's id"
+            },
+            "answers": {
+              "type": "array",
+              "description": "Answers for tech question",
+              "items": {
+                "type": "string",
+                "description": "Answer options"
+              }
+            }
+          }
+        },
+        "example": [
+          {
+            "question": "How many testing principles are there?",
+            "questionId": 1,
+            "answers": ["5", "6", "7", "8", "9", "I don't know"]
+          },
+          {
+            "question": "What does XP stands for in testing",
+            "questionId": 6,
+            "answers": [
+              "eXPerience",
+              "eXtreme Programming",
+              "eXperience Points",
+              "XP Injection",
+              "All options are correct",
+              "All options are incorrect"
+            ]
+          }
+        ]
+      },
+      "QATechResultsRequest": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "questionId": {
+                  "type": "integer",
+                  "description": "Tech question's id"
+                },
+                "rightAnswer": {
+                  "type": "string",
+                  "description": "Answer to the tech question"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "answers": [
+            {
+              "questionId": 1,
+              "rightAnswer": "7"
+            },
+            { "questionId": 6, "rightAnswer": "eXtreme Programming" }
+          ]
+        }
+      },
+      "QATheoryResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question theory"
+            },
+            "questionId": {
+              "type": "integer",
+              "description": "Question's id"
+            },
+            "answers": {
+              "type": "array",
+              "description": "Answers for theory question",
+              "items": {
+                "type": "string",
+                "description": "Answer options"
+              }
+            }
+          }
+        },
+        "example": [
+          {
+            "question": "What does 'CI' stands for in QA?",
+            "questionId": 1,
+            "answers": [
+              "Connection interface",
+              "Nothing",
+              "Continuous Integration",
+              "Centiliter"
+            ]
+          },
+          {
+            "question": "What are the main types of locators in Selenium?",
+            "questionId": 4,
+            "answers": [
+              "ID, ClassName",
+              "Name, TagName",
+              "LinkText, PartialLinkText",
+              "Xpath, CSS Selector, DOM",
+              "All options are correct",
+              "All options are incorrect"
+            ]
+          }
+        ]
+      },
+      "QATheoryResultsRequest": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "questionId": {
+                  "type": "integer",
+                  "description": "Tech question's id"
+                },
+                "rightAnswer": {
+                  "type": "string",
+                  "description": "Answer to the tech question"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "answers": [
+            {
+              "questionId": 1,
+              "rightAnswer": "Continuous Integration"
+            },
+            { "questionId": 4, "rightAnswer": "All options are correct" }
+          ]
+        }
+      },
+      "TestResult": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "description": "Tech or theory result",
+            "example": "80%"
+          }
+        }
+      },
+      "GetUserInfo": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "exampl@email.com"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -1,10 +1,10 @@
 const TechQuestions = require('./schemas/tech-questions');
 
-const getAll = async () => {
-  const data = await TechQuestions.find({});
+const getTechQ = async () => {
+  const data = await TechQuestions.aggregate([{ $sample: {size: 12}}]);
 
   return data;
 };
 module.exports = {
-  getAll,
+  getTechQ,
 };
