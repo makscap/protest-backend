@@ -17,6 +17,8 @@ const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 app.use(logger(formatsLogger));
 app.use(cors());
+
+
 app.use(express.json({ limit: 10000 })) // ставится лимит для того чтобы нельзя было положить сервер от большого количества обьемов инфы
 
 const apiLimiter = rateLimit({
@@ -35,6 +37,12 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 app.use('/api/users', usersRouter)
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+// test route swagger-ui
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
 
