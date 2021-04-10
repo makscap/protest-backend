@@ -44,15 +44,14 @@ app.get('/', (req, res) => {
 // test route swagger-ui
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// test route user
-app.get('/user', async (req, res) => {
-  const user = await User.findById('606849d2cff14956ef33b043');
-  return res.json({
-    status: 'success',
-    code: 200,
-    data: user,
-  });
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
+
+// test route swagger-ui
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // test route tech questions
 app.get('/qa-test/tech', async (req, res) => {
