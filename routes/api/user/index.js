@@ -16,6 +16,7 @@ router.post('/login', userController.login);
 router.post('/logout', guard, userController.logout);
 
 router.get('/verify/:verifyToken', userController.verify);
+router.get('/current', guard, userController.getCurrentUser);
 
 // ---
 router.get('/google', userController.googleAuth);

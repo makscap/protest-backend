@@ -1,6 +1,6 @@
-const User = require("./schemas/users");
+const User = require('./schemas/users');
 
-const findById = async (id) => {
+const findById = async id => {
   return await User.findOne({ _id: id });
 };
 
@@ -8,10 +8,10 @@ const updateById = async (id, data) => {
   return await User.findOneAndUpdate({ _id: id }, { ...data }, { new: true });
 };
 
-const findByEmail = async (email) => {
+const findByEmail = async email => {
   return await User.findOne({ email });
 };
-const findByVerifyToken = async (verifyToken) => {
+const findByVerifyToken = async verifyToken => {
   return await User.findOne({ verifyToken });
 };
 
@@ -32,6 +32,10 @@ const updateAvatar = async (id, avatar) => {
   return await User.updateOne({ _id: id }, { avatarURL: avatar });
 };
 
+const findByToken = async token => {
+  return await User.findOne({ token });
+};
+
 module.exports = {
   updateById,
   findById,
@@ -41,4 +45,5 @@ module.exports = {
   updateAvatar,
   findByVerifyToken,
   updateVerifyToken,
+  findByToken,
 };
