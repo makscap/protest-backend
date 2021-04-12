@@ -104,6 +104,40 @@ const verify = async (req, res, next) => {
   }
 };
 
+// const getCurrentUser = async (req, res, next) => {
+//   try {
+//     const id = req.user._id;
+//     const user = await Users.findById(id);
+//     return res.status(HttpCode.OK).json({
+//       status: 'success',
+//       code: HttpCode.OK,
+//       data: {
+//         email: user.email,
+//       },
+//     });
+//   } catch (e) {
+//     next(e);
+//   }
+// };
+
+const getCurrentUser = async (req, res, next) => {
+  try {
+    const [, token] = req.get('Authorization').split(' ');
+    const user = await Users.findByToken(token);
+    return res.status(HttpCode.OK).json({
+      status: 'success',
+      code: HttpCode.OK,
+      data: {
+        email: user.email,
+        name: user.name,
+        id: user._id,
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 const googleAuth = async (req, res) => {
   const stringifiedParams = queryString.stringify({
     client_id: process.env.GOOGLE_CLIENT_ID,
@@ -168,6 +202,7 @@ module.exports = {
   login,
   logout,
   verify,
+  getCurrentUser,
   googleAuth,
   googleRedirect,
 };
