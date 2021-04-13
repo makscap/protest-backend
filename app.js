@@ -5,14 +5,10 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { HttpCode } = require('./helpers/constants');
 const usersRouter = require('./routes/api/user');
+const questionsRoute = require('./routes/api/questions');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-
-const TechQuestions = require('./model/tech-questions');
-const TheoryQuestions = require('./model/theory-questions');
-
-const guard = require('./helpers/guard');
 
 const app = express();
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
@@ -47,23 +43,8 @@ app.use('/api/', apiLimiter);
 app.use('/api/users', usersRouter);
 
 // test route tech questions
-app.get('/qa-test/tech', guard, async (req, res) => {
-  const techQuestions = await TechQuestions.getTechQ();
-  return res.json({
-    status: 'success',
-    code: 200,
-    data: techQuestions,
-  });
-});
-// test route theory question
-app.get('/qa-test/theory', guard, async (req, res) => {
-  const theoryQuestions = await TheoryQuestions.getTheoryQ();
-  return res.json({
-    status: 'success',
-    code: 200,
-    data: theoryQuestions,
-  });
-});
+app.use('/qa-test', questionsRoute);
+
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found :( ' });
