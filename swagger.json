@@ -3,17 +3,13 @@
   "info": {
     "version": "2.0.0",
     "title": "Pro test API",
-    "description": "Team project group 10.Application endpoints description",
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
+    "description": "Team project group 10.Application endpoints description"
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "servers": [
-    { "url": "http://localhost:3000" },
-    { "url": "...herokuapp.com" }
+    { "url": "https://protest-api.herokuapp.com/" },
+    { "url": "http://localhost:3000" }
   ],
   "tags": [
     {
@@ -21,16 +17,12 @@
       "description": "Authorization endpoints"
     },
     {
-      "name": "TechQuestions",
-      "description": "Technical test endpoints"
-    },
-    {
-      "name": "TheoryQuestions",
-      "description": "Theoretical test endpoints"
+      "name": "Tests",
+      "description": "Technical and Theoretical  tests endpoint"
     }
   ],
   "paths": {
-    "/auth/register": {
+    "/api/users/register": {
       "post": {
         "tags": ["User"],
         "summary": "User registration",
@@ -72,7 +64,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/api/users/login": {
       "post": {
         "tags": ["User"],
         "summary": "User login",
@@ -110,7 +102,7 @@
         }
       }
     },
-    "/auth/logout": {
+    "/api/users/logout": {
       "post": {
         "tags": ["User"],
         "summary": "Logout",
@@ -128,10 +120,10 @@
         }
       }
     },
-    "/user": {
+    "/api/users/current": {
       "get": {
         "tags": ["User"],
-        "summary": "Get user information",
+        "summary": "Get current user information",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
@@ -156,9 +148,25 @@
         }
       }
     },
-    "/tech": {
+    "/api/users/google": {
       "get": {
-        "tags": ["TechQuestions"],
+        "tags": ["User"],
+        "summary": "Google authentication. WARNING: Works only for sign-in, after registered on front-end (if you're writing your back-end for a SPECIFIC front-end, then you can configure it right to work both for sign-up & sign-in)",
+        "responses": {
+          "200": {
+            "description": "Successful operation (redirect to front-end with accessToken, refreshToken and sid in query). Then use GET /user",
+            "content": {}
+          },
+          "403": {
+            "description": "Not registered or registered with postman",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/qa-test/tech": {
+      "get": {
+        "tags": ["Tests"],
         "summary": "Get  tech test of 12 random questions",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -168,7 +176,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QATechResponse"
+                  "$ref": "#/components/schemas/QATech"
                 }
               }
             }
@@ -180,10 +188,34 @@
         }
       }
     },
-    "/tech/results": {
+    "/qa-test/theory": {
+      "get": {
+        "tags": ["Tests"],
+        "summary": "Get  theory test of 12 random questions",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QATheory"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/qa-test/tech-results": {
       "post": {
-        "tags": ["TechQuestions"],
-        "summary": "Get tech test results",
+        "tags": ["Tests"],
+        "summary": "technical test result",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -217,34 +249,10 @@
         }
       }
     },
-    "/theory": {
-      "get": {
-        "tags": ["TheoryQuestions"],
-        "summary": "Get  theory test of 12 random questions",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QATheoryResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized (invalid access token)",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/theory/results": {
+    "/qa-test/theory-results": {
       "post": {
-        "tags": ["TheoryQuestions"],
-        "summary": "Get theory test results",
+        "tags": ["Tests"],
+        "summary": "theoretical test result",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -336,28 +344,29 @@
             "description": "Access token after success login",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjE3MzYzMTIzLCJleHAiOjE2NDg4OTkxMjN9.GYGPRZl0d04e41W4mJSyeS1I5zvfTU-Dz2rMONAFM3U"
           },
-          "userData": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "id": {
-                "type": "string",
-                "description": "User's id",
-                "example": "507f1f77bcf86cd799439012"
-              }
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "id": {
+              "type": "string",
+              "description": "User's id",
+              "example": "507f1f77bcf86cd799439012"
             }
           }
         }
       },
-      "QATechResponse": {
+      "QATech": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
+            "_.id": {
+              "type": "string"
+            },
             "question": {
               "type": "string",
               "description": "Question tech"
@@ -378,59 +387,29 @@
         },
         "example": [
           {
-            "question": "How many testing principles are there?",
-            "questionId": 1,
-            "answers": ["5", "6", "7", "8", "9", "I don't know"]
-          },
-          {
-            "question": "What does XP stands for in testing",
-            "questionId": 6,
+            "_id": "6068487ae4ff5c162cc740c8",
+            "question": "What skills are most often required from a project manager?",
+            "questionId": 10,
             "answers": [
-              "eXPerience",
-              "eXtreme Programming",
-              "eXperience Points",
-              "XP Injection",
+              "Collection and systematization of project requirements",
+              "Work execution plan, KPI, mindmaps",
+              "Search for performers, freelancers, drawing up a portrait of the desired employee for HR",
+              "Setting tasks and monitoring deadlines",
               "All options are correct",
               "All options are incorrect"
-            ]
+            ],
+            "rightAnswer": "All options are correct"
           }
         ]
       },
-      "QATechResultsRequest": {
-        "type": "object",
-        "properties": {
-          "answers": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "questionId": {
-                  "type": "integer",
-                  "description": "Tech question's id"
-                },
-                "rightAnswer": {
-                  "type": "string",
-                  "description": "Answer to the tech question"
-                }
-              }
-            }
-          }
-        },
-        "example": {
-          "answers": [
-            {
-              "questionId": 1,
-              "rightAnswer": "7"
-            },
-            { "questionId": 6, "rightAnswer": "eXtreme Programming" }
-          ]
-        }
-      },
-      "QATheoryResponse": {
+      "QATheory": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
+            "_.id": {
+              "type": "string"
+            },
             "question": {
               "type": "string",
               "description": "Question theory"
@@ -451,30 +430,22 @@
         },
         "example": [
           {
-            "question": "What does 'CI' stands for in QA?",
-            "questionId": 1,
+            "_id": "6068498ae4ff5c162cc740ec",
+            "question": "What kind of testing allows a tester to evaluate the software's behavior when exceptions are thrown?",
+            "questionId": 20,
             "answers": [
-              "Connection interface",
-              "Nothing",
-              "Continuous Integration",
-              "Centiliter"
-            ]
-          },
-          {
-            "question": "What are the main types of locators in Selenium?",
-            "questionId": 4,
-            "answers": [
-              "ID, ClassName",
-              "Name, TagName",
-              "LinkText, PartialLinkText",
-              "Xpath, CSS Selector, DOM",
+              "Injection test malfunction",
+              "Passive testing",
+              "Fuzzy testing",
+              "Centiliter",
               "All options are correct",
-              "All options are incorrect"
-            ]
+              "All options are incorrent"
+            ],
+            "rightAnswer": "Injection test malfunction"
           }
         ]
       },
-      "QATheoryResultsRequest": {
+      "QATechResultsRequest": {
         "type": "object",
         "properties": {
           "answers": {
@@ -486,7 +457,7 @@
                   "type": "integer",
                   "description": "Tech question's id"
                 },
-                "rightAnswer": {
+                "answer": {
                   "type": "string",
                   "description": "Answer to the tech question"
                 }
@@ -498,29 +469,71 @@
           "answers": [
             {
               "questionId": 1,
-              "rightAnswer": "Continuous Integration"
-            },
-            { "questionId": 4, "rightAnswer": "All options are correct" }
+              "answer": "7"
+            }
+          ]
+        }
+      },
+      "QATheoryResultsRequest": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "questionId": {
+                  "type": "integer",
+                  "description": "Theory question's id"
+                },
+                "answer": {
+                  "type": "string",
+                  "description": "Answer to the theory question"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "answers": [
+            {
+              "questionId": 1,
+              "answer": "Continuous Integration"
+            }
           ]
         }
       },
       "TestResult": {
         "type": "object",
         "properties": {
-          "result": {
-            "type": "string",
-            "description": "Tech or theory result",
-            "example": "80%"
+          "rightAnswers": {
+            "type": "integer",
+            "description": "number of correct answers in the test",
+            "example": 7
+          },
+          "wrongAnswers": {
+            "type": "integer",
+            "description": "number of incorrect answers in the test",
+            "example": 5
           }
         }
       },
       "GetUserInfo": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "507f1f77bcf86cd799439012"
+          },
           "email": {
             "type": "string",
             "description": "User's email",
             "example": "exampl@email.com"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name"
           }
         }
       }
