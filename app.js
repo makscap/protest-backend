@@ -1,7 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
-const path = require('path');
+// const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { HttpCode } = require('./helpers/constants');
 const usersRouter = require('./routes/api/user');
@@ -32,8 +32,8 @@ const apiLimiter = rateLimit({
 });
 
 app.get('/', (req, res) => {
-  // res.send('Hello World!');
-  res.sendFile(path.join(__dirname, './public/link.html'));
+  res.send('BackEnd of "ProTest" app!');
+  // res.sendFile(path.join(__dirname, './public/link.html'));
 });
 
 // test route swagger-ui
@@ -44,7 +44,6 @@ app.use('/api/users', usersRouter);
 
 // test route tech questions
 app.use('/qa-test', questionsRoute);
-
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found :( ' });
