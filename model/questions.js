@@ -1,25 +1,25 @@
-const TestQuestions = require('./schemas/questions');
+const { TechQuestions, TheoryQuestions } = require('./schemas/questions');
 
 const getAllTechQ = async () => {
-  const data = await TestQuestions.find({})
+  const data = await TechQuestions.find({})
 
   return data;
 };
 
 const getAllTheoryQ = async () => {
-  const data = await TestQuestions.find({})
+  const data = await TheoryQuestions.find({})
 
   return data;
 };
 
 const getTechQ = async () => {
-  const data = await TestQuestions.aggregate([{ $sample: {size: 12}}]);
+  const data = await TechQuestions.aggregate([{ $sample: {size: 12}}]);
 
   return data;
 };
 
 const getTheoryQ = async () => {
-  const data = await TestQuestions.aggregate([{ $sample: {size: 12}}]);
+  const data = await TheoryQuestions.aggregate([{ $sample: {size: 12}}]);
 
   return data;
 };
