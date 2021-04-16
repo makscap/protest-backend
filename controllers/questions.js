@@ -32,10 +32,10 @@ const getTheoryQ = async (req, res, next) => {
 
 const getTechR = async (req, res, next) => {
     try {
-        const answer = await req.body
+        const { answers } = req.body
         const techQ = await TestQuestions.getAllTechQ()
 
-        const rightAnswers = TestQuestions.getAnswers(answer, techQ)
+        const rightAnswers = TestQuestions.getAnswers(answers, techQ)
         const wrongAnswers = 12 - rightAnswers
         return res.json({
             status: 'success',
@@ -52,10 +52,10 @@ const getTechR = async (req, res, next) => {
 
 const getTheoryR = async (req, res, next) => {
     try {
-        const answer = await req.body
+        const { answers } = req.body
         const theoryQ = await TestQuestions.getAllTheoryQ()
 
-        const rightAnswers = TestQuestions.getAnswers(answer, theoryQ)
+        const rightAnswers = TestQuestions.getAnswers(answers, theoryQ)
         const wrongAnswers = 12 - rightAnswers
         return res.json({
             status: 'success',

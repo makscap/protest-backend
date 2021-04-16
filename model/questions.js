@@ -26,7 +26,7 @@ const getTheoryQ = async () => {
 
 const getAnswers = (answer, right) => {
   const result = answer.filter(item => right.some(
-    ({ _doc }) => item.questionId === _doc.questionId && item.answer === _doc.rightAnswer)
+    (el) => item.questionId === el.questionId && item.answer === el.rightAnswer)
   )
 
   return result.length
