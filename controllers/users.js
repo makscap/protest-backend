@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken');
-// const queryString = require('query-string');
-// const axios = require('axios');
 const Users = require('../model/users');
 const { HttpCode } = require('../helpers/constants');
 const EmailService = require('../services/email');
@@ -148,15 +146,21 @@ const googleLogin = async (req, res, next) => {
       idToken: token,
       audience: process.env.CLIENT_ID,
     });
-    const { /* name, picture, */ email } = ticket.getPayload();
+    const {
+      email_verified: verify,
+      sub,
+      given_name: name,
+      email,
+    } = ticket.getPayload();
 
-    const user = await Users.findByEmail(email);
-    if (!user || !user.verify) {
-      return res.status(200).json({
-        status: 'error',
-        code: 403,
-        data: 'Forbidden',
-        message: 'Email is not registered',
+    let user = await Users.findByEmail(email);
+    if (!user) {
+      user = await Users.create({
+        name,
+        email,
+        verify,
+        password: sub,
+        verifyToken: null,
       });
     }
 
@@ -169,7 +173,7 @@ const googleLogin = async (req, res, next) => {
       status: 'success',
       code: 200,
       data: {
-        token: user.token,
+        token: newToken,
         user: { name: user.name, email: user.email },
       },
     });
@@ -178,72 +182,11 @@ const googleLogin = async (req, res, next) => {
   }
 };
 
-// const googleAuth = async (req, res) => {
-//   const stringifiedParams = queryString.stringify({
-//     client_id: process.env.GOOGLE_CLIENT_ID,
-//     redirect_uri: `${process.env.BASE_URL}/api/users/google-redirect`,
-//     scope: [
-//       'https://www.googleapis.com/auth/userinfo.email',
-//       'https://www.googleapis.com/auth/userinfo.profile',
-//     ].join(' '),
-//     response_type: 'code',
-//     access_type: 'offline',
-//     prompt: 'consent',
-//   });
-//   return res.redirect(
-//     `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`,
-//   );
-// };
-
-// const googleRedirect = async (req, res) => {
-//   const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-//   const urlObj = new URL(fullUrl);
-//   const urlParams = queryString.parse(urlObj.search);
-//   const code = urlParams.code;
-//   const tokenData = await axios({
-//     url: `https://oauth2.googleapis.com/token`,
-//     method: 'post',
-//     data: {
-//       client_id: process.env.GOOGLE_CLIENT_ID,
-//       client_secret: process.env.GOOGLE_CLIENT_SECRET,
-//       redirect_uri: `${process.env.BASE_URL}/api/users/google-redirect`,
-//       grant_type: 'authorization_code',
-//       code,
-//     },
-//   });
-//   const userData = await axios({
-//     url: 'https://www.googleapis.com/oauth2/v2/userinfo',
-//     method: 'get',
-//     headers: {
-//       Authorization: `Bearer ${tokenData.data.access_token}`,
-//     },
-//   });
-//   // userData.data.email
-//   // userData.data.given_name
-//   // ...
-//   // ...
-//   // ...
-//   const { email /* given_name: name */ } = userData.data;
-
-//   const user = await Users.findByEmail(email);
-//   if (!user || !user.verify) {
-//     return res.redirect(`${process.env.FRONTEND_URL}/api/users/google/null`);
-//   }
-
-//   const id = user._id;
-//   const payload = { id };
-//   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '6h' });
-//   await Users.updateToken(id, token);
-//   return res.redirect(`${process.env.FRONTEND_URL}/api/users/google/${id}`);
-// };
-
 module.exports = {
   register,
   login,
   logout,
   verify,
   getCurrentUser,
-  // googleAuth,
-  // googleRedirect,
   googleLogin,
 };
