@@ -68,6 +68,8 @@ const login = async (req, res, next) => {
       code: HttpCode.OK,
       data: {
         token,
+        email: user.email,
+        name: user.name,
       },
     });
   } catch (e) {
