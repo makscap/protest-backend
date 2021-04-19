@@ -1,5 +1,5 @@
 {
-    "dev": "http://localhost:3000",
-    "stage": "https://contacts-stage.heroku.com",
-    "prod": "https://contacts.heroku.com"
+    "dev": "https://protest-api.herokuapp.com",
+    "stage": "https://protest-api.herokuapp.com",
+    "prod": "https://protest-api.herokuapp.com"
   }
