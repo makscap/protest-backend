@@ -76,7 +76,7 @@ const login = async (req, res, next) => {
         email: user.email,
         name: user.name,
         confirm: user.verify,
-        token: token.name,
+        token: token.token,
       },
     });
   } catch (e) {
