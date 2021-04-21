@@ -66,10 +66,17 @@ const login = async (req, res, next) => {
     return res.status(HttpCode.OK).json({
       status: 'success',
       code: HttpCode.OK,
+      // data: {
+      //   token,
+      //   email: user.email,
+      //   name: user.name,
+      // },
       data: {
         token,
         email: user.email,
         name: user.name,
+        confirm: user.verify,
+        token: token.name,
       },
     });
   } catch (e) {
