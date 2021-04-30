@@ -96,11 +96,12 @@ const verify = async (req, res, next) => {
     const user = await Users.findByVerifyToken(req.params.verifyToken);
     if (user) {
       await Users.updateVerifyToken(user.id, true, null);
-      return res.json({
-        status: 'success',
-        code: HttpCode.OK,
-        message: 'Verification successful',
-      });
+      // return res.json({
+      //   status: 'success',
+      //   code: HttpCode.OK,
+      //   message: 'Verification successful',
+      // });
+      return res.status(HttpCode.OK).redirect(process.env.FRONTEND_URL);
     }
     return res.status(HttpCode.NOT_FOUND).json({
       status: 'error',
